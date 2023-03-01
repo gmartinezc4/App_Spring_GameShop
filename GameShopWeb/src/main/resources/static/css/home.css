@@ -1,0 +1,41 @@
+body{
+    background: #3FB153 no-repeat center center fixed;
+    background-size: cover;
+}
+
+.button{
+    margin: 5px;
+    background-color: #05FF31;
+    border-width: 2px;
+    text-decoration: none;
+    color: black;
+}
+
+.UpContainer{
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	
+	width: 100%; 
+    height: 50px; 
+    background: white;
+}
+
+.DownContainer {
+    display: grid;
+    grid-column: 2;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+ 	margin-top: 100px;
+ 	margin-left: 300px;
+}
+
+.precio {
+	display: flex;
+	flex-direction: row;
+}
+
+.bg-green {
+	background: #3FB153 no-repeat center center fixed;
+    background-size: cover;
+}
