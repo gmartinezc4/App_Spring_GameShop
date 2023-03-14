@@ -21,11 +21,25 @@
 	<div class="UpContainer">
 
 		<!-- el th:href="" lo usamos para que al pulsar el boton se redireccione a la vista create -->
-
-		<a th:href="@{/GameShop/user/login}" class="button"> Iniciar Sesion </a> 
-		<a th:href="@{/GameShop/register}" class="button"> Darse de alta </a>
 		
+		<a th:href="@{/GameShop/user/homeUser}" class="button"> Inicio </a>
+		<a th:href="@{/GameShop/user/JuegosReservados}" class="button"> Reservas </a> 
+		<a th:href="@{/GameShop/user/JuegosFavoritos}" class="button"> Favoritos </a>
+		<a th:href="@{/GameShop/user/perfil}" class="button"> Perfil </a> 
+		<a th:href="@{/GameShop/user/cerrarSesion}" class="button"> Cerrar sesión </a> 
+
 	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div
+					th:classappend="'alert-' + (${clase != null} ? ${clase} : info)"
+					th:if="${mensaje != null}" th:text="${mensaje}" class="alert"></div>
+			</div>
+		</div>
+	</div>
+
 
 	<div class="juego">
 		<div class="contenido">
@@ -43,10 +57,21 @@
 				</div>
 			</div>
 			
-			<div class="boton-volver">
-				<a th:href="@{/GameShop}" class="btn btn-warning">Volver</a>
+			<div>
+
+				<a th:href="@{/GameShop/user/añadirReserva/{id} (id=${juego.id})}">
+					<button class="boton">reservar</button>
+				</a>
+
+				<a th:href="@{/GameShop/user/añadirFavorito/{id} (id=${juego.id})}" >
+					<button class="boton">favorito</button> 
+				</a>
+
 			</div>
 			
+			<div class="boton-volver">
+				<a th:href="@{/GameShop/user/homeUser}" class="btn btn-warning">Volver</a>
+			</div>
 			
 
 		</div>

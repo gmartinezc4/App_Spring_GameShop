@@ -40,7 +40,7 @@ body{
 }
 
 .nombre {
-	font-size: 35px;
+	font-size: 30px;
 	margin-bottom: 10px;
 }
 
@@ -51,9 +51,8 @@ body{
 }
 
 .precioAndDescription {
-	padding: 10px;
 	margin-top: 60px;
-	margin-left: 20px;
+	margin-left: 30px;
 	color: white;
 }
 
@@ -64,9 +63,16 @@ body{
 }
 
 .boton {
-	margin-right: 48px;
+	margin-right: 55px;
 	margin-top: 10px;
 	background-color: #05C6FF;
+	
+}
+
+.botonFav {
+	margin-right: 55px;
+	margin-top: 10px;
+	background-color: orange;
 	
 }
 

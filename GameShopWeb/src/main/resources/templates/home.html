@@ -32,7 +32,7 @@
 
 	<div class="DownContainer">
 		<div th:each="juego: ${juego}">
-			<a th:href="@{/GameShop/user/juego/{id} (id=${juego.id}) }"> <img
+			<a th:href="@{/GameShop/juego/{id} (id=${juego.id}) }"> <img
 				alt="MDN" width="200" height="250" th:src="${juego.img}">
 			</a>
 			<div>

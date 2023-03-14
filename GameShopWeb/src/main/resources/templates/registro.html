@@ -14,6 +14,7 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
 	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
 	crossorigin="anonymous">
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -77,10 +78,14 @@
 							title="Tiene que contener almenos un número, una mayuscula y minusculas, y al menos 8 caracteres">
 					</div>
 					
+					<div class="g-recaptcha" data-sitekey="6Lc3YbYiAAAAANKTq7L03UEoJ8aUIwQgVs2P-QyH"></div>
+					</br>
+					
 					<div class="form-group">
 						<button type="submit" class="btn btn-success">Registrar</button>
 						<span>Si estas registrado <a th:href="@{/GameShop/login}">inicia sesión aqui</a></span>
 					</div>
+					
 				</form>
 				
 				<a th:href="@{/GameShop}" class="btn btn-warning"> Volver </a>
