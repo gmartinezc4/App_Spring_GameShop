@@ -8,10 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gameshopapp.repository.IJuegosFavoritosRepository;
 import com.gameshopapp.repository.IJuegosRepository;
 import com.gameshopapp.repository.IUserRepository;
 import com.gameshopapp.model.Juegos;
@@ -27,16 +29,19 @@ public class AppController {
 	private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
 	
 	@Autowired
-	private IJuegosRepository JuegosRepository;
+	private IJuegosRepository juegosRepository;
 	
 	@Autowired
-	private IUserRepository UserRespository;
+	private IUserRepository userRepository;
+	
+	@Autowired
+	private IJuegosFavoritosRepository juegosFavoritosRepository;
 	
 	private User usuario;
 	
 	@GetMapping("")
 	public String home(Model model) {
-		List<Juegos> juegosBbdd = JuegosRepository.findAll();
+		List<Juegos> juegosBbdd = juegosRepository.findAll();
 		model.addAttribute("juego", juegosBbdd);
 		
 		return "home"; 
@@ -47,9 +52,14 @@ public class AppController {
 		return "registro";
 	}
 	
+	@ModelAttribute("usuario")
+	public User newUser() {
+		return new User();
+	}
+	
 	@PostMapping("/register/comprobate")
 	public String registro(@ModelAttribute("usuario") User user, RedirectAttributes redirectAttrs) {
-		List<User> usuariosBbdd = UserRespository.findAll();
+		List<User> usuariosBbdd = userRepository.findAll();
 		boolean coincide = false;
 		
 		for(User u: usuariosBbdd) {
@@ -60,11 +70,11 @@ public class AppController {
 		
 		if(coincide == false) {
 			if(user.getPassword().toString().equals(user.getPasswordRepeat())) {
-				UserRespository.save(user);
+				userRepository.save(user);
 				logg.info("user {}", user.getNombre());
 				usuario = user;
 				logg.info("user {}", usuario.getNombre());
-				return "home";
+				return "redirect:/GameShop";
 			}else {
 				redirectAttrs
 	            .addFlashAttribute("mensaje", "Las contraseñas no coinciden")
@@ -79,4 +89,10 @@ public class AppController {
 		}	
 	}
 	
+	@GetMapping("/juego/{id}")
+	public String verJuego(@PathVariable Integer id, Model model) {	
+		model.addAttribute("juego", juegosRepository.getOne(id));
+		
+		return "detalleJuego";
+	}
 }

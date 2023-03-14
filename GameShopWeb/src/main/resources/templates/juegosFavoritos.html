@@ -18,6 +18,7 @@
 <body>
 
 	<div class="UpContainer">
+		<a th:href="@{/GameShop/user/homeUser}" class="button"> Inicio </a>
 		<a th:href="@{/GameShop/user/JuegosReservados}" class="button"> Reservas </a> 
 		<a th:href="@{/GameShop/user/JuegosFavoritos}" class="button"> Favoritos </a> 
 		<a th:href="@{/GameShop/user/perfil}" class="button"> Perfil </a> 
@@ -25,17 +26,17 @@
 	</div>
 
 	<div class="DownContainer">
-		<div th:each="juego: ${juego}">
-			<a th:href="@{/GameShop/user/juego/{id} (id=${juego.id}) }"> <img
-				alt="MDN" width="200" height="250" th:src="${juego.img}">
-			</a>
+		<div th:each="juegoFav: ${juegosFavs}">
+			 <img alt="MDN" width="200" height="250" th:src="${juegoFav.img}">
 			<div>
-
-				<div th:text="${juego.nombre}"></div>
+				<div th:text="${juegoFav.nombre}"></div>
 				<div class="precio">
-					<div th:text="${juego.precio}"></div>
+					<div th:text="${juegoFav.precio}"></div>
 					<p>€</p>
 				</div>
+				<a th:href="@{/GameShop/user/borrarJuegoFavorito/{id} (id=${juegoFav.id}) }"> 
+					<button>borrar</button>
+				</a>
 			</div>
 		</div>
 	</div>
