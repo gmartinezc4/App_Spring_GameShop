@@ -67,6 +67,7 @@
 						</select>
 					</div>
 
+					</br>
 					<div class="form-group">
 						<label class="control-label" for="telefono">telefono : </label> <input
 							type="tel" th:id="telefono" name="telefono"
@@ -80,19 +81,47 @@
 							title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters">
 					</div>
 					
+					</br>
 					<div class="form-group">
 						<button type="submit" class="btn btn-success">Guardar Cambios</button>
 					</div>
-					
-					
+
 				</form>
 				
 				<a th:href="@{/GameShop/user/homeUser}" class="btn btn-warning"> Volver </a>
 				
+				</br></br></br>
+				<div th:if="${user.idDatosBancarios != null}">
+						<div class="form-group">
+							<label class="control-label" for="email">Numero de la Tarjeta: </label> <input
+								id="numeroTarjeta" type="number" name="numeroTarjeta" class="form-control"
+								th:value="${datosBancarios.numeroTarjeta}" readonly>
+								
+							</br>
+							<label class="control-label" for="email">Nombre: </label> <input
+								id="nombreTarjeta" type="text" name="nombreTarjeta" class="form-control"
+								th:value="${datosBancarios.nombreTarjeta}"  readonly>
+								
+							</br>
+							<label class="control-label" for="email">Fecha de caducidad: </label> <input
+								id="fechaCaducidad" type="text" name="fechaCaducidad" class="form-control"
+								th:value="${datosBancarios.fechaCaducidad}"  readonly>
+								
+						</div>
+						
+						</br>
+						<a th:href="@{/GameShop/user/borrarMetodoPago}" class="btn btn-danger"> Borrar Método de pago </a>
+					</div>		
+				
+				<div th:if="${user.idDatosBancarios == null}"> 
+					<a th:href="@{/GameShop/user/anadirMetodoPago}" class="btn btn-success"> Añadir Método de pago </a>
+				</div>
+				
 				<form th:action="@{/GameShop/user/darseDeBaja}" method="post">
-				 	<br><br>
+				 	<br><br><br>
 					<button type="submit" class="btn btn-danger">Darse de baja</button>
 				</form>
+				</br></br></br></br>
 			
 </body>
 </html>

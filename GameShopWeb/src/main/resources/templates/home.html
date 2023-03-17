@@ -22,8 +22,6 @@
 
 		<!-- el th:href="" lo usamos para que al pulsar el boton se redireccione a la vista create -->
 
-		<!-- <a th:href="@{/Nebri-Fit/clases}" class="button"> Clases </a> -->
-
 		<a th:href="@{/GameShop/user/login}" class="button"> Iniciar
 			Sesion </a> <a th:href="@{/GameShop/register}" class="button"> Darse
 			de alta </a>
@@ -45,24 +43,6 @@
 			</div>
 		</div>
 	</div>
-
-
-	<!--  
-	<div class="DownContainer">
-		<div th:each="juego: ${juego}" th:object="${usuario}">	
-			<div th:href="@{/GameShop/user/juego}">
-				<img alt="MDN" width="200" height="250" th:src="${juego.img}">
-				<div id="nombre" th:text="${juego.nombre}"></div>
-				<div class="precio">
-					<div th:text="${juego.precio}"></div>
-					<p>€</p>
-				</div>
-		</div>
-			
-			
-		</div>
-	</div>
-	-->
 
 </body>
 </html>

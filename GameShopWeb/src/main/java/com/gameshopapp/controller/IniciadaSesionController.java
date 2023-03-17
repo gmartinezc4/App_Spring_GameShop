@@ -2,7 +2,6 @@ package com.gameshopapp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +13,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.util.ArrayUtils;
 
+import com.gameshopapp.model.DatosBancarios;
 import com.gameshopapp.model.Juegos;
 import com.gameshopapp.model.JuegosFavoritos;
 import com.gameshopapp.model.JuegosReservados;
 import com.gameshopapp.model.User;
+import com.gameshopapp.repository.IDatosBancariosRepository;
 import com.gameshopapp.repository.IJuegosFavoritosRepository;
 import com.gameshopapp.repository.IJuegosRepository;
 import com.gameshopapp.repository.IJuegosReservadosRepository;
 import com.gameshopapp.repository.IUserRepository;
 
+
 @Controller
 @RequestMapping("/GameShop/user")
 public class IniciadaSesionController {
 
-private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
+	private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
 	
 	@Autowired
 	private IJuegosRepository juegosRepository;
@@ -43,9 +44,13 @@ private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
 	@Autowired
 	private IJuegosReservadosRepository juegosReservadosRepository;
 	
+	@Autowired
+	private IDatosBancariosRepository datosBancariosRepository;
+	
 	private User usuario = new User();
 	private JuegosFavoritos juegoFav = new JuegosFavoritos();
 	private JuegosReservados juegoReservado = new JuegosReservados();
+	private DatosBancarios datosBancarios;
 	
 	boolean yaEsFav = false;
 	boolean yaEstaReservado = false;
@@ -160,11 +165,73 @@ private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
 	
 	@GetMapping("/añadirReserva/{id}")
 	public String añadirAReservados(@PathVariable Integer id, Model model, RedirectAttributes redirectAttrs) {
-		model.addAttribute("juego", juegosRepository.getOne(id));
+		
+		if(usuario.getIdDatosBancarios() != null) {	
+			yaEstaReservado = false;
+			int idJuegoReservado = id;
+			juegoReservado = new JuegosReservados();
+			
+			List<JuegosReservados> juegosReservadosUser =  juegosReservadosRepository.findAll();
+			
+			for(JuegosReservados j: juegosReservadosUser) {
+				if(j.getIdJuego().equals(id) && j.getIdUser().equals(usuario.getId())) {
+					yaEstaReservado = true;
+					idJuegoReservado = j.getId();
+				}
+			}
+			
+			if(yaEstaReservado) {
+				juegoReservado.setIdJuego(id);
+				juegoReservado.setIdUser(usuario.getId());
+				
+				juegosReservadosRepository.deleteById(idJuegoReservado);
+				
+				yaEstaReservado = false;
+				
+				redirectAttrs
+		        .addFlashAttribute("mensaje", "Juego quitado de reservas")
+		        .addFlashAttribute("clase", "success");
+			}else {
+				juegoReservado.setIdJuego(id);
+				juegoReservado.setIdUser(usuario.getId());
+
+				juegosReservadosRepository.save(juegoReservado);
+
+				yaEstaReservado = true;
+				idJuegoReservado = id;
+				
+				redirectAttrs
+		        .addFlashAttribute("mensaje", "Juego reservado")
+		        .addFlashAttribute("clase", "success");
+			}
+			
+			return "redirect:/GameShop/user/juegoReservado";
+		}else {
+			model.addAttribute("usuario", usuario);
+			model.addAttribute("juegoId", id);
+			return "datosBancariosJuego";
+		}
+	}
+	
+	@GetMapping("/juegoReservado")
+	public String verDetalleJuegoaReservados(Model model) {
+		model.addAttribute("juego", juegosRepository.getOne(juegoReservado.getIdJuego()));
 		model.addAttribute("user", usuario);
 		
+		return "detalleJuegoUser";
+	}
+	
+	@PostMapping("/saveDatosBancariosJuego/{id}")
+	public String guardarMetodoPagoJuego(@PathVariable Integer id, DatosBancarios datos, Model model, RedirectAttributes redirectAttrs) {
+		datosBancariosRepository.save(datos);
+		
+		usuario.setIdDatosBancarios(datos.getId());
+		userRepository.save(usuario);
+		
+		datosBancarios = datos;
+	
 		yaEstaReservado = false;
-		int idJuegoReservado = 0;
+		int idJuegoReservado = id;
 		juegoReservado = new JuegosReservados();
 		
 		List<JuegosReservados> juegosReservadosUser =  juegosReservadosRepository.findAll();
@@ -204,17 +271,54 @@ private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
 		return "redirect:/GameShop/user/juegoReservado";
 	}
 	
-	@GetMapping("/juegoReservado")
-	public String verDetalleJuegoaReservados(Model model) {
-		model.addAttribute("juego", juegosRepository.getOne(juegoReservado.getIdJuego()));
-		model.addAttribute("user", usuario);
+	@PostMapping("/saveDatosBancarios")
+	public String guardarMetodoPago(DatosBancarios datos, Model model) {
+		datosBancariosRepository.save(datos);
+		datosBancarios = datos;
 		
-		return "detalleJuegoUser";
+		usuario.setIdDatosBancarios(datos.getId());
+		userRepository.save(usuario);
+		
+		model.addAttribute("user", usuario);
+		model.addAttribute("datosBancarios", datos);
+		
+		return "perfil";
+	}
+	
+	@GetMapping("/anadirMetodoPago")
+	public String anadirMetodoPago(Model model) {
+		model.addAttribute("usuario", usuario);
+
+		return "datosBancarios";
+	}
+	
+	@GetMapping("/borrarMetodoPago")
+	public String borrarMetodoPago(Model model) {
+		datosBancariosRepository.deleteById(usuario.getIdDatosBancarios());
+		datosBancarios = new DatosBancarios();
+		
+		usuario.setIdDatosBancarios(null);
+		userRepository.save(usuario);
+
+		List<JuegosReservados> juegosReservados = juegosReservadosRepository.findAll();
+		
+		for(JuegosReservados j: juegosReservados) {
+			if(usuario.getId() == j.getIdUser()) {
+				juegosReservadosRepository.delete(j);
+			}
+		}
+		
+		return "redirect:/GameShop/user/perfil";
 	}
 	
 	@GetMapping("/perfil")
 	public String verPrefil(Model model) {
 		model.addAttribute("user", usuario);
+		
+		if(usuario.getIdDatosBancarios() != null) {
+			DatosBancarios datosBancariosUser = datosBancariosRepository.getOne(usuario.getIdDatosBancarios());
+			model.addAttribute("datosBancarios", datosBancariosUser);
+		}
 		
 		return "perfil";
 	}
