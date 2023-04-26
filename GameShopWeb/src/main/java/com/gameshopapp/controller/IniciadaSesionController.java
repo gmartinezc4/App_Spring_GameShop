@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gameshopapp.model.Comentarios;
 import com.gameshopapp.model.DatosBancarios;
 import com.gameshopapp.model.Juegos;
 import com.gameshopapp.model.JuegosFavoritos;
 import com.gameshopapp.model.JuegosReservados;
 import com.gameshopapp.model.User;
+import com.gameshopapp.repository.IComentariosRepository;
 import com.gameshopapp.repository.IDatosBancariosRepository;
 import com.gameshopapp.repository.IJuegosFavoritosRepository;
 import com.gameshopapp.repository.IJuegosRepository;
@@ -47,10 +49,14 @@ public class IniciadaSesionController {
 	@Autowired
 	private IDatosBancariosRepository datosBancariosRepository;
 	
+	@Autowired
+	private IComentariosRepository comentariosRepository;
+	
 	private User usuario = new User();
 	private JuegosFavoritos juegoFav = new JuegosFavoritos();
 	private JuegosReservados juegoReservado = new JuegosReservados();
 	private DatosBancarios datosBancarios;
+	private Comentarios comentarios = new Comentarios();
 	
 	boolean yaEsFav = false;
 	boolean yaEstaReservado = false;
@@ -76,6 +82,11 @@ public class IniciadaSesionController {
 	
 	@PostMapping("/login/comprobate")
 	public String iniciarSession(@ModelAttribute("usuario") User user, RedirectAttributes redirectAttrs) {
+		if(user.getEmail().toString().equalsIgnoreCase("admin@admin.com") && 
+				user.getPassword().toString().equalsIgnoreCase("Adminadmin123")) {
+			return "redirect:/GameShop/admin";
+		}
+		
 		List<User> usuariosBbdd = userRepository.findAll();
 		
 		for(User u: usuariosBbdd) {
@@ -104,6 +115,18 @@ public class IniciadaSesionController {
 		model.addAttribute("juego", juegosRepository.getOne(id));
 		model.addAttribute("user", usuario);
 		model.addAttribute("estaReservado", yaEstaReservado);	
+		
+		ArrayList<Comentarios> ComentariosJuego = new ArrayList<Comentarios>();
+		
+		List<Comentarios> comentarios = comentariosRepository.findAll();
+		
+		for(Comentarios coments: comentarios) {
+			if(coments.getIdJuego().equals(id)) {
+				ComentariosJuego.add(coments);
+			}
+		}
+		
+		model.addAttribute("comentarios", ComentariosJuego);
 		
 		return "detalleJuegoUser";
 	}
@@ -225,10 +248,16 @@ public class IniciadaSesionController {
 	public String guardarMetodoPagoJuego(@PathVariable Integer id, DatosBancarios datos, Model model, RedirectAttributes redirectAttrs) {
 		datosBancariosRepository.save(datos);
 		
-		usuario.setIdDatosBancarios(datos.getId());
-		userRepository.save(usuario);
+		List<DatosBancarios> datosB = datosBancariosRepository.findAll();
 		
-		datosBancarios = datos;
+		for(DatosBancarios d: datosB) {
+			if(d.getIdUser() == usuario.getId()) {
+				usuario.setIdDatosBancarios(d.getId());
+				userRepository.save(usuario);
+				
+				datosBancarios = d;
+			}
+		}
 	
 		yaEstaReservado = false;
 		int idJuegoReservado = id;
@@ -415,6 +444,23 @@ public class IniciadaSesionController {
 		usuario = null;
 		
 		return "redirect:/GameShop";
+	}
+	
+	@PostMapping("/guardarComentario")
+	public String guardarComentarioUser(Comentarios comentario, RedirectAttributes redirectAttrs) {
+		comentarios.setComentario(comentario.getComentario());
+		comentarios.setIdUser(usuario.getId());
+		comentarios.setIdJuego(comentario.getIdJuego());
+		
+		comentariosRepository.save(comentarios);
+		
+		comentarios = new Comentarios();
+
+		redirectAttrs
+        .addFlashAttribute("mensaje", "Comentario añadido")
+        .addFlashAttribute("clase", "success");
+		
+		return "redirect:/GameShop/user/homeUser";
 	}
 	
 }

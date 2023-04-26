@@ -24,7 +24,12 @@
 		<a th:href="@{/GameShop/user/cerrarSesion}" class="button"> Cerrar sesión </a> 
 	</div>
 
+	<div
+		th:classappend="'alert-' + (${clase != null} ? ${clase} : info)"
+		th:if="${mensaje != null}" th:text="${mensaje}" class="alert"></div>
+
 	<div class="DownContainer">
+		
 		<div th:each="juego: ${juego}">
 			<a th:href="@{/GameShop/user/juego/{id} (id=${juego.id}) }"> <img
 				alt="MDN" width="200" height="250" th:src="${juego.img}">

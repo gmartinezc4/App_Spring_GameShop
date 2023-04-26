@@ -27,10 +27,8 @@
 
 		<!-- el th:href="" lo usamos para que al pulsar el boton se redireccione a la vista create -->
 		
-		<a th:href="@{/GameShop/user/homeUser}" class="button"> Inicio </a>
-		<a th:href="@{/GameShop/user/JuegosReservados}" class="button"> Reservas </a> 
-		<a th:href="@{/GameShop/user/JuegosFavoritos}" class="button"> Favoritos </a>
-		<a th:href="@{/GameShop/user/perfil}" class="button"> Perfil </a> 
+		<a th:href="@{/GameShop/admin}" class="button"> Inicio </a>
+		<a th:href="@{/GameShop/admin/bbddUsers}" class="button"> Usuarios </a> 
 		<a th:href="@{/GameShop/user/cerrarSesion}" class="button"> Cerrar sesión </a> 
 
 	</div>
@@ -64,43 +62,33 @@
 			
 			<div>
 
-				<a th:href="@{/GameShop/user/añadirReserva/{id} (id=${juego.id})}">
-					<button class="boton">reservar</button>
+				<a th:href="@{/GameShop/admin/editarJuego/{id} (id=${juego.id})}">
+					<button class="boton">editar</button>
 				</a>
 
-				<a th:href="@{/GameShop/user/añadirFavorito/{id} (id=${juego.id})}" >
-					<button class="boton">favorito</button> 
+				<a th:href="@{/GameShop/admin/borrarJuego/{id} (id=${juego.id})}" >
+					<button class="boton">borrar</button> 
 				</a>
 
 			</div>
 		
 			<div class="boton-volver">
-				<a th:href="@{/GameShop/user/homeUser}" class="btn btn-warning">Volver</a>
+				<a th:href="@{/GameShop/admin}" class="btn btn-warning">Volver</a>
 			</div>
-
-			<br> <br>
 			
-			<form th:action="@{/GameShop/user/guardarComentario}" method="post">
-				
-				<h1>Comentarios</h1>
-				<input  type="text" style="width : 1000px" placeholder="Escribe tu comentario"
-				 th:id="comentario" name="comentario" autocomplete="off"></input> <br> <br>
-				
-				<input  type="hidden" style="width : 1000px" placeholder="Escribe tu comentario"
-				 th:id="idJuego" name="idJuego" th:value="${juego.id}"></input>
-				 
-				<button type="submit" class="btn btn-success" >Guardar</button>
-				
-			</form>
-			
-			<br><br>
-			
+			<br>
+			<h1>Comentarios</h1> <br>
 			<table class="table">
 				<tr th:each="comentarios: ${comentarios}"> <!-- bucle para recorrer la variable productos -->
 						<td scope="row">
 							<img  style="width : 50px; height : 50px" src="https://static.vecteezy.com/system/resources/previews/008/442/086/original/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg">
 						</td>
 						<td scope="row" th:text="${comentarios.comentario}"></td>
+						
+						<td>
+							<a th:href="@{/GameShop/admin/borrarComentario/{id} (id=${comentarios.id}) }" class="btn btn-danger"> Borrar </a>
+						</td>
+						
 				</tr>
 			</table>
 			
