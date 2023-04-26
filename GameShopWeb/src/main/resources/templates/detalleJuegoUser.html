@@ -79,29 +79,31 @@
 			</div>
 
 			<br> <br>
-			<!-- 
-			<form th:action="@{/GameShop/user/calificar}" method="post" th:object="${calificacion}">
-				<div class="col-12">
-					<div class="card">
-						<div class="card-header">
-							<h2>Puntuación</h2>
-						</div>
-	
-						<div class="mb-3">
-							<select required class="form-selected" id="puntuacion" multiple th:field="*{puntuacion}">
-								<option class="fa fa-star" value="1">1 </option>
-								<option class="fa fa-star" value="2">2 <span class="fa fa-star"></span></option> 
-								<option class="fa fa-star" value="3">3 <span class="fa fa-star"></span></option>
-								<option class="fa fa-star" value="4">4 <span class="fa fa-star"></span></option>
-								<option class="fa fa-star" value="5">5 <span class="fa fa-star"></span></option>
-							</select>
-						</div>
-						<button type="submit" class="btn btn-primary">Calificar</button>
-	
-					</div>
-				</div>
+			
+			<form th:action="@{/GameShop/user/guardarComentario}" method="post">
+				
+				<h1>Comentarios</h1>
+				<input  type="text" style="width : 1000px" placeholder="Escribe tu comentario"
+				 th:id="comentario" name="comentario" autocomplete="off"></input> <br> <br>
+				
+				<input  type="hidden" style="width : 1000px" placeholder="Escribe tu comentario"
+				 th:id="idJuego" name="idJuego" th:value="${juego.id}"></input>
+				 
+				<button type="submit" class="btn btn-success" >Guardar</button>
+				
 			</form>
- 		-->
+			
+			<br><br>
+			
+			<table class="table">
+				<tr th:each="comentarios: ${comentarios}"> <!-- bucle para recorrer la variable productos -->
+						<td scope="row">
+							<img  style="width : 50px; height : 50px" src="https://static.vecteezy.com/system/resources/previews/008/442/086/original/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg">
+						</td>
+						<td scope="row" th:text="${comentarios.comentario}"></td>
+				</tr>
+			</table>
+			
 		</div>
 
 	</div>

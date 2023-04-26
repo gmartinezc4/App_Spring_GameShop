@@ -1,5 +1,6 @@
 package com.gameshopapp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gameshopapp.repository.IComentariosRepository;
 import com.gameshopapp.repository.IJuegosFavoritosRepository;
 import com.gameshopapp.repository.IJuegosRepository;
 import com.gameshopapp.repository.IUserRepository;
+import com.gameshopapp.model.Comentarios;
 import com.gameshopapp.model.Juegos;
 import com.gameshopapp.model.User;
 
@@ -37,7 +40,11 @@ public class AppController {
 	@Autowired
 	private IJuegosFavoritosRepository juegosFavoritosRepository;
 	
+	@Autowired
+	private IComentariosRepository comentariosRepository;
+	
 	private User usuario;
+	private Comentarios comentarios = new Comentarios();
 	
 	@GetMapping("")
 	public String home(Model model) {
@@ -92,6 +99,18 @@ public class AppController {
 	@GetMapping("/juego/{id}")
 	public String verJuego(@PathVariable Integer id, Model model) {	
 		model.addAttribute("juego", juegosRepository.getOne(id));
+		
+		ArrayList<Comentarios> ComentariosJuego = new ArrayList<Comentarios>();
+		
+		List<Comentarios> comentarios = comentariosRepository.findAll();
+		
+		for(Comentarios coments: comentarios) {
+			if(coments.getIdJuego().equals(id)) {
+				ComentariosJuego.add(coments);
+			}
+		}
+		
+		model.addAttribute("comentarios", ComentariosJuego);
 		
 		return "detalleJuego";
 	}

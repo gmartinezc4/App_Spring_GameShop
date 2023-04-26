@@ -27,10 +27,8 @@
 
 		<!-- el th:href="" lo usamos para que al pulsar el boton se redireccione a la vista create -->
 		
-		<a th:href="@{/GameShop/user/homeUser}" class="button"> Inicio </a>
-		<a th:href="@{/GameShop/user/JuegosReservados}" class="button"> Reservas </a> 
-		<a th:href="@{/GameShop/user/JuegosFavoritos}" class="button"> Favoritos </a>
-		<a th:href="@{/GameShop/user/perfil}" class="button"> Perfil </a> 
+		<a th:href="@{/GameShop/admin}" class="button"> Inicio </a>
+		<a th:href="@{/GameShop/admin/bbddUsers}" class="button"> Usuarios </a> 
 		<a th:href="@{/GameShop/user/cerrarSesion}" class="button"> Cerrar sesión </a> 
 
 	</div>
@@ -77,6 +75,23 @@
 			<div class="boton-volver">
 				<a th:href="@{/GameShop/admin}" class="btn btn-warning">Volver</a>
 			</div>
+			
+			<br>
+			<h1>Comentarios</h1> <br>
+			<table class="table">
+				<tr th:each="comentarios: ${comentarios}"> <!-- bucle para recorrer la variable productos -->
+						<td scope="row">
+							<img  style="width : 50px; height : 50px" src="https://static.vecteezy.com/system/resources/previews/008/442/086/original/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg">
+						</td>
+						<td scope="row" th:text="${comentarios.comentario}"></td>
+						
+						<td>
+							<a th:href="@{/GameShop/admin/borrarComentario/{id} (id=${comentarios.id}) }" class="btn btn-danger"> Borrar </a>
+						</td>
+						
+				</tr>
+			</table>
+			
 		</div>
 
 	</div>

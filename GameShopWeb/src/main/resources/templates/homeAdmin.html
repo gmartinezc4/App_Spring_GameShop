@@ -21,6 +21,11 @@
 		<a th:href="@{/GameShop/admin/bbddUsers}" class="button"> Usuarios </a> 
 		<a th:href="@{/GameShop/user/cerrarSesion}" class="button"> Cerrar sesión </a> 
 	</div>
+	
+	<div th:classappend="'alert-' + (${clase != null} ? ${clase} : info)" th:if="${mensaje != null}"
+		 th:text="${mensaje}"
+		 class="alert">
+	</div>
 
 	<div class="DownContainer">
 		<div th:each="juego: ${juego}">

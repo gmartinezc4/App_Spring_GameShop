@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gameshopapp.model.Comentarios;
 import com.gameshopapp.model.DatosBancarios;
 import com.gameshopapp.model.Juegos;
 import com.gameshopapp.model.JuegosFavoritos;
 import com.gameshopapp.model.JuegosReservados;
 import com.gameshopapp.model.User;
+import com.gameshopapp.repository.IComentariosRepository;
 import com.gameshopapp.repository.IDatosBancariosRepository;
 import com.gameshopapp.repository.IJuegosFavoritosRepository;
 import com.gameshopapp.repository.IJuegosRepository;
@@ -47,14 +49,17 @@ public class IniciadaSesionController {
 	@Autowired
 	private IDatosBancariosRepository datosBancariosRepository;
 	
+	@Autowired
+	private IComentariosRepository comentariosRepository;
+	
 	private User usuario = new User();
 	private JuegosFavoritos juegoFav = new JuegosFavoritos();
 	private JuegosReservados juegoReservado = new JuegosReservados();
 	private DatosBancarios datosBancarios;
+	private Comentarios comentarios = new Comentarios();
 	
 	boolean yaEsFav = false;
 	boolean yaEstaReservado = false;
-	String calificacion;
 
 	
 	@GetMapping("/homeUser")
@@ -110,6 +115,18 @@ public class IniciadaSesionController {
 		model.addAttribute("juego", juegosRepository.getOne(id));
 		model.addAttribute("user", usuario);
 		model.addAttribute("estaReservado", yaEstaReservado);	
+		
+		ArrayList<Comentarios> ComentariosJuego = new ArrayList<Comentarios>();
+		
+		List<Comentarios> comentarios = comentariosRepository.findAll();
+		
+		for(Comentarios coments: comentarios) {
+			if(coments.getIdJuego().equals(id)) {
+				ComentariosJuego.add(coments);
+			}
+		}
+		
+		model.addAttribute("comentarios", ComentariosJuego);
 		
 		return "detalleJuegoUser";
 	}
@@ -429,11 +446,21 @@ public class IniciadaSesionController {
 		return "redirect:/GameShop";
 	}
 	
-//	@PostMapping("/calificar")
-//	public String registro(@ModelAttribute("calificacion") String cal, RedirectAttributes redirectAttrs) {
-//		System.out.println(calificacion);
-//		return"";
-//	}
-	
+	@PostMapping("/guardarComentario")
+	public String guardarComentarioUser(Comentarios comentario, RedirectAttributes redirectAttrs) {
+		comentarios.setComentario(comentario.getComentario());
+		comentarios.setIdUser(usuario.getId());
+		comentarios.setIdJuego(comentario.getIdJuego());
+		
+		comentariosRepository.save(comentarios);
+		
+		comentarios = new Comentarios();
+
+		redirectAttrs
+        .addFlashAttribute("mensaje", "Comentario añadido")
+        .addFlashAttribute("clase", "success");
+		
+		return "redirect:/GameShop/user/homeUser";
+	}
 	
 }

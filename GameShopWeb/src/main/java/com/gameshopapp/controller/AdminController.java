@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gameshopapp.model.Comentarios;
 import com.gameshopapp.model.DatosBancarios;
 import com.gameshopapp.model.Juegos;
 import com.gameshopapp.model.JuegosFavoritos;
 import com.gameshopapp.model.JuegosReservados;
 import com.gameshopapp.model.User;
+import com.gameshopapp.repository.IComentariosRepository;
 import com.gameshopapp.repository.IDatosBancariosRepository;
 import com.gameshopapp.repository.IJuegosFavoritosRepository;
 import com.gameshopapp.repository.IJuegosRepository;
@@ -50,6 +52,10 @@ public class AdminController {
 	@Autowired
 	private IJuegosReservadosRepository juegosReservadosRepository;
 	
+	@Autowired
+	private IComentariosRepository comentariosRepository;
+	
+	private Comentarios comentarios = new Comentarios();
 	
 	//una forma de ir mostrando lo que hace el logg, en vez de usar un System.out.println()
 	private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
@@ -70,6 +76,18 @@ public class AdminController {
 	@GetMapping("/juego/{id}")
 	public String verJuego(@PathVariable Integer id, Model model) {
 		model.addAttribute("juego", juegosRepository.getOne(id));
+		
+		ArrayList<Comentarios> ComentariosJuego = new ArrayList<Comentarios>();
+		
+		List<Comentarios> comentarios = comentariosRepository.findAll();
+		
+		for(Comentarios coments: comentarios) {
+			if(coments.getIdJuego().equals(id)) {
+				ComentariosJuego.add(coments);
+			}
+		}
+		
+		model.addAttribute("comentarios", ComentariosJuego);
 		
 		return "detalleJuegoAdmin";
 	}
@@ -92,6 +110,7 @@ public class AdminController {
 	public String borrarJuego(@PathVariable Integer id) {
 		List<JuegosFavoritos> juegosFavRepository = juegosFavoritosRepository.findAll();
 		List<JuegosReservados> juegosResRepository = juegosReservadosRepository.findAll();
+		List<Comentarios> TodosComentarios = comentariosRepository.findAll();
 		
 		for(JuegosFavoritos jf: juegosFavRepository) {
 			if(jf.getIdJuego().equals(id)) {
@@ -102,6 +121,12 @@ public class AdminController {
 		for(JuegosReservados jr: juegosResRepository) {
 			if(jr.getIdJuego().equals(id)) {
 				juegosReservadosRepository.deleteById(jr.getId());
+			}
+		}
+		
+		for(Comentarios c: TodosComentarios) {
+			if(c.getIdJuego().equals(id)) {
+				comentariosRepository.deleteById(c.getId());
 			}
 		}
 		
@@ -239,145 +264,25 @@ public class AdminController {
         .addFlashAttribute("mensaje", "Error")
         .addFlashAttribute("clase", "success");
 		
-		return "redirect:/GameShop/admin/bbddUsers";
-		
+		return "redirect:/GameShop/admin/bbddUsers";	
 	}
 	
-	// falta hacer los comentarios en los juegos y moderarlos el admin 
-	
-//	
-//	@GetMapping("/tarifasAdmin")
-//	public String mostrarTarifasAdmin(Model model) {	//el objeto model permite llevar info desde el controlador hasta la vista
-//		model.addAttribute("tarifas", tarifaRepository.findAll());
-//		return "tarifasAdmin";
-//	}
-//	
-
-//	
-//	@GetMapping("/añadirTarifa")
-//	public String añadirTarifa() {		
-//		return "añadirTarifa";
-//	}
-//	
-//	@PostMapping("/saveNewTarifa")
-//	public String saveNewTarifa(Tarifas newTarifa) {
-//		tarifaRepository.save(newTarifa);
-//		return "redirect:/Nebri-Fit/admin/tarifasAdmin";
-//	}
-//	
-//	@GetMapping("/modificarTarifa/{id}")
-//	public String modificarTarifa(@PathVariable Integer id, Model model) {		
-//		model.addAttribute("tarifa", tarifaRepository.getOne(id));
-//		return "editTarifa";
-//	}
-//	
-//	@PostMapping("/saveModifiTarifa")
-//	public String saveModifiTarifa(Tarifas modifiTarifa) {
-//		tarifaRepository.save(modifiTarifa);
-//		return "redirect:/Nebri-Fit/admin/tarifasAdmin";
-//	}
-//	
-//	@GetMapping("/eliminarTarifa/{id}")
-//	public String eliminarTarifa(@PathVariable Integer id) {		
-//		List<BbddUsersTarifas> bbddUserTarifas = bbddUserTarifasRepository.findAll();
-//		List<DatosBancarios> datosBancarios = datosBancariosRepository.findAll();
-//		List<BbddUsersClases> bbddUserClases = bbddUserClasesRepository.findAll();
-//		
-//		for(BbddUsersTarifas t: bbddUserTarifas) {
-//			FichaUser usuario = userRepository.getOne(t.getIdUser());
-//			if(t.getIdTarifa().equals(id)) {
-//				//borramos la tarifa
-//				bbddUserTarifasRepository.deleteById(t.getId());
-//				
-//				//borramos los datos bancarios del usuario que tenia esa tarifa
-//				for(DatosBancarios d: datosBancarios) {
-//					if(d.getIdUser().equals(t.getIdUser())) {
-//						datosBancariosRepository.delete(d);
-//					}
-//				}
-//				usuario.setIdDatosBancarios(null);
-//				userRepository.save(usuario);
-//				
-//				//borramos las clases del usuario que tenia esa tarifa
-//				for(BbddUsersClases c: bbddUserClases) {
-//					if(c.getIdUser().equals(t.getIdUser()))
-//						bbddUserClasesRepository.deleteById(c.getId());
-//				}
-//			}
-//				
-//				
-//		}
-//		
-//		tarifaRepository.deleteById(id);
-//		
-//		return "redirect:/Nebri-Fit/admin/tarifasAdmin";
-//	}
-//	
-//	@GetMapping("/clasesAdmin")
-//	public String mostrarClasesAdmin(Model model) {	//el objeto model permite llevar info desde el controlador hasta la vista
-//		model.addAttribute("clasesGym", clasesGymRepository.findAll());
-//		return "clasesGymAdmin";
-//	}
-//	
-//	@GetMapping("/verClases/{id}")
-//	public String verClases(@PathVariable Integer id, Model model) {
-//		List<ClasesGym> clases = clasesGymRepository.findAll();
-//		List<BbddUsersClases> bbddUserClases = bbddUserClasesRepository.findAll();
-//		
-//		ArrayList<ClasesGym> misClases = new ArrayList<ClasesGym>();
-//	
-//		for(BbddUsersClases c: bbddUserClases) {
-//			if(c.getIdClase().equals(id)) {
-//				for(ClasesGym cg: clases) {
-//					if(cg.getId().equals(c.getIdClase())) {
-//						misClases.add(cg);
-//					}
-//				}
-//			}
-//		}
-//
-//		model.addAttribute("misClasesGym", misClases);
-//		return "misClasesAdmin";
-//		
-//	}
-//	
-//	@GetMapping("/añadirClase")
-//	public String añadirClase() {		
-//		return "añadirClase";
-//	}
-//	
-//	@PostMapping("/saveNewClase")
-//	public String saveNewClase(ClasesGym newClase) {
-//		clasesGymRepository.save(newClase);
-//		return "redirect:/Nebri-Fit/admin/clasesAdmin";
-//	}
-//	
-//	@GetMapping("/modificarClase/{id}")
-//	public String modificarClase(@PathVariable Integer id, Model model) {		
-//		model.addAttribute("clase", clasesGymRepository.getOne(id));
-//		return "editClase";
-//	}
-//	
-//	@PostMapping("/saveModifiClase")
-//	public String saveModifiClase(ClasesGym modifiClase) {
-//		clasesGymRepository.save(modifiClase);
-//		return "redirect:/Nebri-Fit/admin/clasesAdmin";
-//	}
-//	
-//	@GetMapping("/eliminarClase/{id}")
-//	public String eliminarClase(@PathVariable Integer id) {		
-//		
-//		List<BbddUsersClases> bbddUserClases = bbddUserClasesRepository.findAll();
-//		
-//		for(BbddUsersClases c: bbddUserClases) {
-//			if(c.getIdClase().equals(id))
-//				bbddUserClasesRepository.deleteById(c.getId());
-//		}
-//		
-//		clasesGymRepository.deleteById(id);
-//		
-//		return "redirect:/Nebri-Fit/admin/clasesAdmin";
-//	}
+	@GetMapping("/borrarComentario/{id}")
+	public String borrarJuegoReservadoUser(@PathVariable Integer id, Model model, RedirectAttributes redirectAttrs) {
+		List<Comentarios> TodosComentarios = comentariosRepository.findAll();
+		
+		for(Comentarios c: TodosComentarios) {
+			if(c.getId().equals(id)) {
+				comentariosRepository.deleteById(id);
+			}
+		}
+		
+		redirectAttrs
+        .addFlashAttribute("mensaje", "Comentario borrado correctamente")
+        .addFlashAttribute("clase", "success");
+		
+		return "redirect:/GameShop/admin";
+	} 
 	
 }
 

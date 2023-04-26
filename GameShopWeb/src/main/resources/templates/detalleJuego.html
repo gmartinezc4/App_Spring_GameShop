@@ -50,7 +50,16 @@
 				<a th:href="@{/GameShop}" class="btn btn-warning">Volver</a>
 			</div>
 			
-			
+			<br>
+			<h1>Comentarios</h1> <br>
+			<table class="table">
+				<tr th:each="comentarios: ${comentarios}"> <!-- bucle para recorrer la variable productos -->
+						<td scope="row">
+							<img  style="width : 50px; height : 50px" src="https://static.vecteezy.com/system/resources/previews/008/442/086/original/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg">
+						</td>
+						<td scope="row" th:text="${comentarios.comentario}"></td>
+				</tr>
+			</table>
 
 		</div>
 
