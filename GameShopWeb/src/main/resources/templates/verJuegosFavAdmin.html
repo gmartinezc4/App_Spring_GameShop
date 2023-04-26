@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html xmlns:th="https://www.thymeLeaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Tarifas</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+</head>
+<body>
+	
+	<div class="container">
+		<h1>Juegos Favoritos del usuario </h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="row">ID</th>
+					<th scope="row">Nombre</th>
+					<th scope="row">Empresa</th>
+					<th scope="row">Precio</th>
+					<th scope="row">Stock</th>
+					<th scope="row">ID user</th>
+					<th scope="row">email user</th>	
+				</tr>
+			</thead>
+			<tbody>
+				
+				<tr th:each="juegosFav: ${juegosFav}"> <!-- bucle para recorrer la variable productos -->
+					
+					<td scope="row" th:text="${juegosFav.id}"></td>
+					<td scope="row" th:text="${juegosFav.nombre}"></td>
+					<td scope="row" th:text="${juegosFav.empresa}"></td>
+					<td scope="row" th:text="${juegosFav.precio}"></td>
+					<td scope="row" th:text="${juegosFav.stock}"></td>
+					<td scope="row" th:text="${user.id}"></td>
+					<td scope="row" th:text="${user.email}"></td>
+
+				</tr>
+			
+			</tbody>
+		</table>
+		
+		<a th:href="@{/GameShop/admin/bbddUsers}" class="btn btn-warning"> Volver </a>
+		
+		
+	</div>
+</body>
+</html>

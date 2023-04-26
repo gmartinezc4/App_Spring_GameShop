@@ -54,6 +54,7 @@ public class IniciadaSesionController {
 	
 	boolean yaEsFav = false;
 	boolean yaEstaReservado = false;
+	String calificacion;
 
 	
 	@GetMapping("/homeUser")
@@ -76,6 +77,11 @@ public class IniciadaSesionController {
 	
 	@PostMapping("/login/comprobate")
 	public String iniciarSession(@ModelAttribute("usuario") User user, RedirectAttributes redirectAttrs) {
+		if(user.getEmail().toString().equalsIgnoreCase("admin@admin.com") && 
+				user.getPassword().toString().equalsIgnoreCase("Adminadmin123")) {
+			return "redirect:/GameShop/admin";
+		}
+		
 		List<User> usuariosBbdd = userRepository.findAll();
 		
 		for(User u: usuariosBbdd) {
@@ -225,10 +231,16 @@ public class IniciadaSesionController {
 	public String guardarMetodoPagoJuego(@PathVariable Integer id, DatosBancarios datos, Model model, RedirectAttributes redirectAttrs) {
 		datosBancariosRepository.save(datos);
 		
-		usuario.setIdDatosBancarios(datos.getId());
-		userRepository.save(usuario);
+		List<DatosBancarios> datosB = datosBancariosRepository.findAll();
 		
-		datosBancarios = datos;
+		for(DatosBancarios d: datosB) {
+			if(d.getIdUser() == usuario.getId()) {
+				usuario.setIdDatosBancarios(d.getId());
+				userRepository.save(usuario);
+				
+				datosBancarios = d;
+			}
+		}
 	
 		yaEstaReservado = false;
 		int idJuegoReservado = id;
@@ -416,5 +428,12 @@ public class IniciadaSesionController {
 		
 		return "redirect:/GameShop";
 	}
+	
+//	@PostMapping("/calificar")
+//	public String registro(@ModelAttribute("calificacion") String cal, RedirectAttributes redirectAttrs) {
+//		System.out.println(calificacion);
+//		return"";
+//	}
+	
 	
 }

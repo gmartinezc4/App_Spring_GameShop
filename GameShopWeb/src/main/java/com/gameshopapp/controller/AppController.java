@@ -23,7 +23,7 @@ import com.gameshopapp.model.User;
 
 
 @Controller
-@RequestMapping("/GameShop") //path donde vamos a apuntar después de la url para poder acceder al recurso (http:localhot:8080/GameShop)
+@RequestMapping("/GameShop") //path donde vamos a apuntar después de la url para poder acceder al recurso (http:localhost:8080/GameShop)
 public class AppController {
 
 	private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>Modificar Clase</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+
+				<h1>Modificar Juego</h1>
+				<form th:action="@{/GameShop/admin/saveModifiJuego}" method="post">
+					
+					<div class="form-group">
+						<input th:id="id" name="id" type="hidden" class="form-control"
+							th:value="${juego.id}">
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nombre">Img: </label> <input
+							th:id="img" name="img" type="text" class="form-control"
+							th:value="${juego.img}" min="2">
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="nombre">Nombre: </label> <input
+							th:id="nombre" name="nombre" type="text" class="form-control"
+							th:value="${juego.nombre}" min="2">
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="nombre">Empresa: </label> <input
+							th:id="empresa" name="empresa" type="text" class="form-control"
+							th:value="${juego.empresa}" min="2">
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="nombre">Descripción: </label> <input 
+							th:id="descripcion" name="descripcion" type="text" class="form-control"
+							th:value="${juego.descripcion}" minlength="1" maxlenght="100">
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="nombre">Stock: </label> <input
+							th:id="stock" name="stock" type="text" class="form-control"
+							th:value="${juego.stock}" minlength="1" maxlenght="3">
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="nombre">Precio: </label> <input
+							th:id="precio" name="precio" type="text" class="form-control"
+							th:value="${juego.precio}" minlenght="2" maxlength="5">
+					</div>
+
+	
+					
+					<div class="form-group">	
+						<button type="submit" class="btn btn-success">Guardar Cambios</button>
+					</div>
+							
+				</form>
+				
+				<a th:href="@{/GameShop/admin/juego/{id} (id=${juego.id}) }" class="btn btn-warning"> Volver </a>		
+</body>
+</html>

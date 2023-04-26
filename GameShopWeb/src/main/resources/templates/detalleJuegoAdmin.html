@@ -64,44 +64,19 @@
 			
 			<div>
 
-				<a th:href="@{/GameShop/user/añadirReserva/{id} (id=${juego.id})}">
-					<button class="boton">reservar</button>
+				<a th:href="@{/GameShop/admin/editarJuego/{id} (id=${juego.id})}">
+					<button class="boton">editar</button>
 				</a>
 
-				<a th:href="@{/GameShop/user/añadirFavorito/{id} (id=${juego.id})}" >
-					<button class="boton">favorito</button> 
+				<a th:href="@{/GameShop/admin/borrarJuego/{id} (id=${juego.id})}" >
+					<button class="boton">borrar</button> 
 				</a>
 
 			</div>
 		
 			<div class="boton-volver">
-				<a th:href="@{/GameShop/user/homeUser}" class="btn btn-warning">Volver</a>
+				<a th:href="@{/GameShop/admin}" class="btn btn-warning">Volver</a>
 			</div>
-
-			<br> <br>
-			<!-- 
-			<form th:action="@{/GameShop/user/calificar}" method="post" th:object="${calificacion}">
-				<div class="col-12">
-					<div class="card">
-						<div class="card-header">
-							<h2>Puntuación</h2>
-						</div>
-	
-						<div class="mb-3">
-							<select required class="form-selected" id="puntuacion" multiple th:field="*{puntuacion}">
-								<option class="fa fa-star" value="1">1 </option>
-								<option class="fa fa-star" value="2">2 <span class="fa fa-star"></span></option> 
-								<option class="fa fa-star" value="3">3 <span class="fa fa-star"></span></option>
-								<option class="fa fa-star" value="4">4 <span class="fa fa-star"></span></option>
-								<option class="fa fa-star" value="5">5 <span class="fa fa-star"></span></option>
-							</select>
-						</div>
-						<button type="submit" class="btn btn-primary">Calificar</button>
-	
-					</div>
-				</div>
-			</form>
- 		-->
 		</div>
 
 	</div>

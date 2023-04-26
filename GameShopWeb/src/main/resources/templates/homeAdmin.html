@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <!-- PARA QUE SE PUEDAN PONER TILDES -->
-<title>Reservas</title>
+<title>Admin</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -18,25 +18,22 @@
 <body>
 
 	<div class="UpContainer">
-		<a th:href="@{/GameShop/user/homeUser}" class="button"> Inicio </a>
-		<a th:href="@{/GameShop/user/JuegosReservados}" class="button"> Reservas </a> 
-		<a th:href="@{/GameShop/user/JuegosFavoritos}" class="button"> Favoritos </a> 
-		<a th:href="@{/GameShop/user/perfil}" class="button"> Perfil </a> 
+		<a th:href="@{/GameShop/admin/bbddUsers}" class="button"> Usuarios </a> 
 		<a th:href="@{/GameShop/user/cerrarSesion}" class="button"> Cerrar sesión </a> 
 	</div>
 
 	<div class="DownContainer">
-		<div th:each="juegoReservado: ${juegosReservados}">
-			 <img alt="MDN" width="200" height="250" th:src="${juegoReservado.img}">
+		<div th:each="juego: ${juego}">
+			<a th:href="@{/GameShop/admin/juego/{id} (id=${juego.id}) }"> <img
+				alt="MDN" width="200" height="250" th:src="${juego.img}">
+			</a>
 			<div>
-				<div th:text="${juegoReservado.nombre}"></div>
+
+				<div th:text="${juego.nombre}"></div>
 				<div class="precio">
-					<div th:text="${juegoReservado.precio}"></div>
+					<div th:text="${juego.precio}"></div>
 					<p>€</p>
 				</div>
-				<a th:href="@{/GameShop/user/borrarJuegoReservado/{id} (id=${juegoReservado.id}) }"> 
-					<button>borrar</button>
-				</a>
 			</div>
 		</div>
 	</div>
