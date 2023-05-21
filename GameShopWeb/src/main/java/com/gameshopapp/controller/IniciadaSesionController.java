@@ -31,8 +31,6 @@ import com.gameshopapp.repository.IUserRepository;
 @Controller
 @RequestMapping("/GameShop/user")
 public class IniciadaSesionController {
-
-	private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
 	
 	@Autowired
 	private IJuegosRepository juegosRepository;

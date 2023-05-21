@@ -24,8 +24,10 @@
 		<a th:href="@{/GameShop/user/perfil}" class="button"> Perfil </a> 
 		<a th:href="@{/GameShop/user/cerrarSesion}" class="button"> Cerrar sesión </a> 
 	</div>
-
+	
+	<h1 class="DownContainer">Juegos reservados</h1>
 	<div class="DownContainer">
+	
 		<div th:each="juegoReservado: ${juegosReservados}">
 			 <img alt="MDN" width="200" height="250" th:src="${juegoReservado.img}">
 			<div>

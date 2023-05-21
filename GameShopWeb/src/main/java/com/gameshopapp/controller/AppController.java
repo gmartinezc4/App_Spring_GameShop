@@ -22,9 +22,6 @@ import com.gameshopapp.model.Comentarios;
 import com.gameshopapp.model.Juegos;
 import com.gameshopapp.model.User;
 
-
-
-
 @Controller
 @RequestMapping("/GameShop") //path donde vamos a apuntar después de la url para poder acceder al recurso (http:localhost:8080/GameShop)
 public class AppController {
@@ -38,13 +35,9 @@ public class AppController {
 	private IUserRepository userRepository;
 	
 	@Autowired
-	private IJuegosFavoritosRepository juegosFavoritosRepository;
-	
-	@Autowired
 	private IComentariosRepository comentariosRepository;
 	
 	private User usuario;
-	private Comentarios comentarios = new Comentarios();
 	
 	@GetMapping("")
 	public String home(Model model) {

@@ -54,9 +54,7 @@ public class AdminController {
 	
 	@Autowired
 	private IComentariosRepository comentariosRepository;
-	
-	private Comentarios comentarios = new Comentarios();
-	
+		
 	//una forma de ir mostrando lo que hace el logg, en vez de usar un System.out.println()
 	private final org.slf4j.Logger logg = LoggerFactory.getLogger(User.class);
 	
